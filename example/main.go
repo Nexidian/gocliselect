@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Nexidian/gocliselect"
+import "github.com/nexidian/gocliselect"
 
 func main() {
 	menu := gocliselect.NewMenu("", "Select an option")
