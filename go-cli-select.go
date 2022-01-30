@@ -1,4 +1,4 @@
-package go_cli_select
+package gocliselect
 
 import (
 	"fmt"
