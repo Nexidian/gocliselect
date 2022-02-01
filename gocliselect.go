@@ -133,6 +133,9 @@ func getInput() byte {
 	readBytes := make([]byte, 3)
 	read, err = t.Read(readBytes)
 
+	t.Restore()
+	t.Close()
+
 	// Arrow keys are prefixed with the ANSI escape code which take up the first two bytes.
 	// The third byte is the key specific value we are looking for.
 	// For example the left arrow key is '<esc>[A' while the right is '<esc>[C'
@@ -145,7 +148,5 @@ func getInput() byte {
 		return readBytes[0]
 	}
 
-	t.Restore()
-	t.Close()
 	return 0
 }
