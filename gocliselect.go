@@ -18,7 +18,6 @@ var keys = map[byte]bool {
 }
 
 type Menu struct {
-	Heading   	string
 	Prompt  	string
 	CursorPos 	int
 	MenuItems 	[]*MenuItem
@@ -30,9 +29,8 @@ type MenuItem struct {
 	SubMenu  *Menu
 }
 
-func NewMenu(heading string, prompt string) *Menu {
+func NewMenu(prompt string) *Menu {
 	return &Menu{
-		Heading: heading,
 		Prompt: prompt,
 		MenuItems: make([]*MenuItem, 0),
 	}
@@ -84,14 +82,9 @@ func (m *Menu) renderMenuItems(redraw bool) {
 // It returns the users selected choice
 func (m *Menu) Display() string {
 	defer func() {
-		// Show cursor.
+		// Show cursor again.
 		fmt.Printf("\033[?25h")
 	}()
-
-	if m.Heading != "" {
-		fmt.Println(m.Heading)
-		fmt.Println("another message")
-	}
 
 	fmt.Printf("%s\n", goterm.Color(goterm.Bold(m.Prompt) + ":", goterm.CYAN))
 
@@ -102,13 +95,12 @@ func (m *Menu) Display() string {
 
 	for {
 		keyCode := getInput()
-		//keyCode := escape
 		if keyCode == escape {
 			return ""
 		} else if keyCode == enter {
 			menuItem := m.MenuItems[m.CursorPos]
 			fmt.Println("\r")
-			return string(menuItem.ID)
+			return menuItem.ID
 		} else if keyCode == up {
 			m.CursorPos = (m.CursorPos + len(m.MenuItems) - 1) % len(m.MenuItems)
 			m.renderMenuItems(true)

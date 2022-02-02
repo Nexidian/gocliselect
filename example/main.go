@@ -1,15 +1,20 @@
 package main
 
-import "github.com/nexidian/gocliselect"
+import (
+	"fmt"
+	"github.com/nexidian/gocliselect"
+)
 
 func main() {
-	menu := gocliselect.NewMenu("", "Select an option")
+	menu := gocliselect.NewMenu("Chose a colour")
 
-	menu.AddItem("Option 1", "option1")
-	menu.AddItem("Option 2", "option2")
-	menu.AddItem("Option 3", "option3")
-	menu.AddItem("Option 4", "option4")
-	menu.AddItem("Option 5", "option5")
+	menu.AddItem("Red", "red")
+	menu.AddItem("Blue", "blue")
+	menu.AddItem("Green", "green")
+	menu.AddItem("Yellow", "yellow")
+	menu.AddItem("Cyan", "cyan")
 
-	menu.Display()
+	choice := menu.Display()
+
+	fmt.Printf("Choice: %s\n", choice)
 }
