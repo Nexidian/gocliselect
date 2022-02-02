@@ -1,6 +1,8 @@
 # Golang CLI Select
 Lightweight interactive CLI selection library 
 
+![](https://media.giphy.com/media/Nmc3muJhaCfPe2LWd9/giphy.gif)
+
 
 ## Import the package
 ```go
