@@ -9,7 +9,9 @@ import (
 
 // Raw input keycodes
 var up byte = 65
+var kUp byte = 107
 var down byte = 66
+var jDown byte = 106
 var escape byte = 27
 var enter byte = 13
 var keys = map[byte]bool {
@@ -21,6 +23,7 @@ type Menu struct {
 	Prompt  	string
 	CursorPos 	int
 	MenuItems 	[]*MenuItem
+	VimKeys   bool
 }
 
 type MenuItem struct {
@@ -101,10 +104,10 @@ func (m *Menu) Display() string {
 			menuItem := m.MenuItems[m.CursorPos]
 			fmt.Println("\r")
 			return menuItem.ID
-		} else if keyCode == up {
+		} else if keyCode == up || (m.VimKeys && keyCode == kUp) {
 			m.CursorPos = (m.CursorPos + len(m.MenuItems) - 1) % len(m.MenuItems)
 			m.renderMenuItems(true)
-		} else if keyCode == down {
+		} else if keyCode == down || (m.VimKeys && keyCode == jDown) {
 			m.CursorPos = (m.CursorPos + 1) % len(m.MenuItems)
 			m.renderMenuItems(true)
 		}
@@ -123,7 +126,7 @@ func getInput() byte {
 
 	var read int
 	readBytes := make([]byte, 3)
-	read, err = t.Read(readBytes)
+	read, _ = t.Read(readBytes)
 
 	t.Restore()
 	t.Close()
