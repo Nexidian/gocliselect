@@ -7,6 +7,7 @@ import (
 
 func main() {
 	menu := gocliselect.NewMenu("Chose a colour")
+	menu.VimKeys = true
 
 	menu.AddItem("Red", "red")
 	menu.AddItem("Blue", "blue")
