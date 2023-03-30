@@ -1,7 +1,7 @@
 # Golang CLI Select
 Lightweight interactive CLI selection library 
 
-![](https://media.giphy.com/media/Nmc3muJhaCfPe2LWd9/giphy.gif)
+![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzEyYWNlYTEzNzE5MGVhNzM5NTdmNTZmOGQ2ZDY5Zjg2MWNlZjE5YyZjdD1n/s341iOOEJk5fnahc2H/giphy.gif)
 
 
 ## Import the package
@@ -22,6 +22,7 @@ as well as the id
 menu.AddItem("Red", "red")
 menu.AddItem("Blue", "blue")
 menu.AddItem("Green", "green")
+menu.AddHint("Extra colours:")
 menu.AddItem("Yellow", "yellow")
 menu.AddItem("Cyan", "cyan")
 ```
@@ -47,8 +48,9 @@ func main() {
     menu.AddItem("Red", "red")
     menu.AddItem("Blue", "blue")
     menu.AddItem("Green", "green")
-    menu.AddItem("Yellow", "yellow")
-    menu.AddItem("Cyan", "cyan")
+	menu.AddHint("Extra colours:")
+	menu.AddItem("Yellow", "yellow")
+	menu.AddItem("Cyan", "cyan")
 
     choice := menu.Display()
 

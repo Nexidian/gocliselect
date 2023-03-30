@@ -35,6 +35,7 @@ func NewMenu(prompt string) *Menu {
 	return &Menu{
 		Prompt:    prompt,
 		MenuItems: make([]*MenuItem, 0),
+		CursorPos: -1,
 	}
 }
 
@@ -47,6 +48,10 @@ func (m *Menu) AddItem(option string, id string) *Menu {
 	}
 
 	m.MenuItems = append(m.MenuItems, menuItem)
+	// shows correct pos for menus starting from hint
+	if m.CursorPos == -1 {
+		m.CursorPos = len(m.MenuItems) - 1
+	}
 	return m
 }
 
@@ -64,7 +69,7 @@ func (m *Menu) AddHint(hint string) *Menu {
 // renderMenuItems prints the menu item list.
 // Setting redraw to true will re-render the options list with updated current selection.
 func (m *Menu) renderMenuItems(redraw bool) {
-	// needed only when we have more than 1 menu item
+	// need this only we have more than 1 item
 	if redraw && len(m.MenuItems) > 1 {
 		// Move the cursor up n lines where n is the number of options, setting the new
 		// location to start printing from, effectively redrawing the option list
@@ -93,7 +98,7 @@ func (m *Menu) renderMenuItems(redraw bool) {
 			}
 			fmt.Printf("\r%s %s%s", cursor, menuItemText, newline)
 		case false:
-			fmt.Printf("%s\n", goterm.Color(menuItemText, goterm.CYAN))
+			fmt.Printf("\r%s%s", goterm.Color(menuItemText, goterm.CYAN), newline)
 		}
 	}
 }
@@ -106,6 +111,10 @@ func (m *Menu) Display() string {
 		fmt.Printf("\033[?25h")
 	}()
 
+	// adding blank item is the easiest way to keep everyting working in empty menus
+	if len(m.MenuItems) == 0 {
+		m.AddHint("")
+	}
 	fmt.Printf("%s\n", goterm.Color(goterm.Bold(m.Prompt)+":", goterm.CYAN))
 
 	m.renderMenuItems(false)
