@@ -48,9 +48,9 @@ func main() {
     menu.AddItem("Red", "red")
     menu.AddItem("Blue", "blue")
     menu.AddItem("Green", "green")
-	menu.AddHint("Extra colours:")
-	menu.AddItem("Yellow", "yellow")
-	menu.AddItem("Cyan", "cyan")
+    menu.AddHint("Extra colours:")
+    menu.AddItem("Yellow", "yellow")
+    menu.AddItem("Cyan", "cyan")
 
     choice := menu.Display()
 
