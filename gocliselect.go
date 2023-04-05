@@ -123,15 +123,18 @@ func (m *Menu) Display() string {
 	fmt.Printf("\033[?25l")
 
 	for {
-		keyCode := getInput()
-		if keyCode == escape {
+		// sorry im switch fanboy
+		switch getInput() {
+		case escape:
 			fmt.Println("\r")
 			return ""
-		} else if keyCode == enter {
+		case enter:
 			menuItem := m.MenuItems[m.CursorPos]
+			m.CursorPos = -1
+			m.renderMenuItems(true)
 			fmt.Println("\r")
 			return menuItem.ID
-		} else if keyCode == up {
+		case up:
 			m.CursorPos = (m.CursorPos + len(m.MenuItems) - 1) % len(m.MenuItems)
 			// prevent looping over non-selectable menus if you're going to make them for some reason
 			iter := 0
@@ -140,7 +143,7 @@ func (m *Menu) Display() string {
 				iter++
 			}
 			m.renderMenuItems(true)
-		} else if keyCode == down {
+		case down:
 			m.CursorPos = (m.CursorPos + 1) % len(m.MenuItems)
 			// prevent looping over non-selectable menus if you're going to make them for some reason
 			iter := 0
@@ -166,6 +169,9 @@ func getInput() byte {
 	var read int
 	readBytes := make([]byte, 3)
 	read, err = t.Read(readBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	t.Restore()
 	t.Close()
