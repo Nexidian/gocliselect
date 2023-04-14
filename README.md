@@ -22,6 +22,7 @@ as well as the id
 menu.AddItem("Red", "red")
 menu.AddItem("Blue", "blue")
 menu.AddItem("Green", "green")
+menu.AddHint("Extra colours:")
 menu.AddItem("Yellow", "yellow")
 menu.AddItem("Cyan", "cyan")
 ```
@@ -47,6 +48,7 @@ func main() {
     menu.AddItem("Red", "red")
     menu.AddItem("Blue", "blue")
     menu.AddItem("Green", "green")
+    menu.AddHint("Extra colours:")
     menu.AddItem("Yellow", "yellow")
     menu.AddItem("Cyan", "cyan")
 
