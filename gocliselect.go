@@ -5,6 +5,9 @@ import (
 	"github.com/buger/goterm"
 	"github.com/pkg/term"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 // Raw input keycodes
@@ -93,6 +96,10 @@ func (m *Menu) Display() string {
 	// Turn the terminal cursor off
 	fmt.Printf("\033[?25l")
 
+	// Channel to signal interrupt
+	interruptChan := make(chan os.Signal, 1)
+	signal.Notify(interruptChan, os.Interrupt, syscall.SIGTERM)
+
 	for {
 		keyCode := getInput()
 		if keyCode == escape {
@@ -121,13 +128,18 @@ func getInput() byte {
 		log.Fatal(err)
 	}
 
+	defer t.Close() // Close t in defer to ensure it's always closed
+
 	var read int
 	readBytes := make([]byte, 3)
 	read, err = t.Read(readBytes)
+	if err != nil {
+		// Handle read error, it might be due to signal interruption
+		return 0 // Or some other value indicating error/interruption if needed
+	}
 
-	t.Restore()
-	t.Close()
-
+	defer t.Restore() // Restore terminal mode in defer
+	
 	// Arrow keys are prefixed with the ANSI escape code which take up the first two bytes.
 	// The third byte is the key specific value we are looking for.
 	// For example the left arrow key is '<esc>[A' while the right is '<esc>[C'
