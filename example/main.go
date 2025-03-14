@@ -14,12 +14,15 @@ func main() {
 	menu.AddItem("Yellow", 1.0)
 	menu.AddItem("Cyan", "cyan")
 
-	result := menu.Display()
+	result, err := menu.Display()
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+	}
 
-	if id, ok := result.(int); ok {
-		fmt.Printf("Choice int: %d\n", id)
-	} else if id, ok := result.(string); ok {
-		fmt.Printf("Choice string: %s\n", id)
+	if _, ok := result.(int); ok {
+		fmt.Printf("Selected option: %d\n", result)
+	} else if _, ok := result.(string); ok {
+		fmt.Printf("Selected option: %s\n", result)
 	} else {
 		fmt.Printf("Selected option of unexpected type: %T with value: %v\n", result, result)
 	}

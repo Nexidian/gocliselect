@@ -50,7 +50,10 @@ func main() {
     menu.AddItem("Yellow", "yellow")
     menu.AddItem("Cyan", "cyan")
 
-    choice := menu.Display()
+    choice, err := menu.Display()
+    if err != nil {
+        fmt.Printf("Error: %v\n", err)
+    }
 
     fmt.Printf("Choice: %s\n", choice)
 }

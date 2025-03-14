@@ -1,21 +1,16 @@
 package gocliselect
 
 import (
+	"errors"
 	"fmt"
 	"github.com/buger/goterm"
 	"github.com/pkg/term"
 	"log"
 )
 
-// Raw input keycodes
-var up byte = 65
-var down byte = 66
-var escape byte = 27
-var enter byte = 13
-var keys = map[byte]bool{
-	up:   true,
-	down: true,
-}
+var (
+	ErrNoMenuItems = errors.New("menu has no items to display")
+)
 
 type Menu struct {
 	Prompt    string
@@ -56,7 +51,7 @@ func (m *Menu) renderMenuItems(redraw bool) {
 		//
 		// This is done by sending a VT100 escape code to the terminal
 		// @see http://www.climagic.org/mirrors/VT100_Escape_Codes.html
-		fmt.Printf("\033[%dA", len(m.MenuItems)-1)
+		fmt.Printf(CursorUpFormat, len(m.MenuItems)-1)
 	}
 
 	for index, menuItem := range m.MenuItems {
@@ -80,31 +75,36 @@ func (m *Menu) renderMenuItems(redraw bool) {
 
 // Display will display the current menu options and awaits user selection
 // It returns the users selected choice
-func (m *Menu) Display() interface{} {
+func (m *Menu) Display() (interface{}, error) {
 	defer func() {
 		// Show cursor again.
-		fmt.Printf("\033[?25h")
+		fmt.Printf(ShowCursor)
 	}()
+
+	if len(m.MenuItems) == 0 {
+		return nil, ErrNoMenuItems
+	}
 
 	fmt.Printf("%s\n", goterm.Color(goterm.Bold(m.Prompt)+":", goterm.CYAN))
 
 	m.renderMenuItems(false)
 
 	// Turn the terminal cursor off
-	fmt.Printf("\033[?25l")
+	fmt.Printf(HideCursor)
 
 	for {
 		keyCode := getInput()
-		if keyCode == escape {
-			return ""
-		} else if keyCode == enter {
+		switch keyCode {
+		case KeyEscape:
+			return "", nil
+		case KeyEnter:
 			menuItem := m.MenuItems[m.CursorPos]
 			fmt.Println("\r")
-			return menuItem.ID
-		} else if keyCode == up {
+			return menuItem.ID, nil
+		case KeyUp:
 			m.CursorPos = (m.CursorPos + len(m.MenuItems) - 1) % len(m.MenuItems)
 			m.renderMenuItems(true)
-		} else if keyCode == down {
+		case KeyDown:
 			m.CursorPos = (m.CursorPos + 1) % len(m.MenuItems)
 			m.renderMenuItems(true)
 		}
@@ -133,7 +133,7 @@ func getInput() byte {
 	// For example the left arrow key is '<esc>[A' while the right is '<esc>[C'
 	// See: https://en.wikipedia.org/wiki/ANSI_escape_code
 	if read == 3 {
-		if _, ok := keys[readBytes[2]]; ok {
+		if _, ok := NavigationKeys[readBytes[2]]; ok {
 			return readBytes[2]
 		}
 	} else {
