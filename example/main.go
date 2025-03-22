@@ -8,11 +8,14 @@ import (
 func main() {
 	menu := gocliselect.NewMenu("Chose a colour")
 
-	menu.AddItem("Red", "red")
-	menu.AddItem("Blue", 1)
-	menu.AddItem("Green", 123)
-	menu.AddItem("Yellow", 1.0)
-	menu.AddItem("Cyan", "cyan")
+	menu.AddItem("Red", 1)
+	menu.AddItem("Blue", 2)
+	menu.AddItem("Green", 3)
+	menu.AddItem("Yellow", 4)
+	menu.AddItem("Red", 5)
+	menu.AddItem("Blue", 6)
+	menu.AddItem("Green", 7)
+	menu.AddItem("Yellow", 8)
 
 	result, err := menu.Display()
 	if err != nil {
